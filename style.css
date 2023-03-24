@@ -12,6 +12,10 @@ body {
   background-color: var(--lightest);
 }
 
+button {
+  cursor: pointer;
+}
+
 .main {
   display: grid;
   grid-template-columns: 1fr;
@@ -60,6 +64,7 @@ header {
 
 #timer-label {
   text-align: right;
+  display: none;
 }
 
 #level, #timer {
@@ -87,6 +92,25 @@ header {
   background-color: var(--dark);
 }
 
+.overlay-start {
+  display: none;
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  z-index: 10;
+  background-color: var(--dark);
+  text-align: center;
+}
+
+.overlay-start button {
+  font-family: 'Comfortaa', cursive;
+  font-size: 1.5rem;  
+  padding: 0.7rem 1rem 0.7rem 1rem;
+}
+
+
+
+
 .settings-menu {
   display: flex;
 }
@@ -100,7 +124,6 @@ header {
   place-self: center;
   height: 50px;
   width: 50px;
-  cursor: pointer;
   border: none;
   background-color: var(--lightest);
 }
@@ -108,4 +131,8 @@ header {
 .material-icons {
   font-weight: bold;
   font-size: 50px; 
+}
+
+.material-icons:hover {
+  color: var(--bg-col);
 }
