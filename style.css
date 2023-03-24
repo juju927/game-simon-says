@@ -1,0 +1,113 @@
+:root {
+  --text-col: black;
+  --grid-inactive-col: red;
+  --grid-active-col: blue;
+  --bg-col: rgb(238, 241, 255);
+  --lightest: rgb(210, 218, 255);
+  --mid: rgb(170, 196, 255);
+  --dark: rgb(177, 178, 255);
+
+}
+
+body {
+  background-color: var(--lightest);
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 5fr .7fr;
+  width: 600px;
+  height: 800px;
+  margin: auto;
+  border-radius: 3%;
+  background-color: var(--lightest);
+}
+
+header {
+  grid-row: 1;
+  font-family: 'Gaegu', cursive;
+  text-align: center;
+  font-size: 4rem;
+  letter-spacing: .2rem;
+  word-spacing: 120%;
+  text-shadow: .2rem .2rem var(--dark);
+  margin-top: 1.5rem;
+}
+
+.game-main {
+  grid-row: 2;
+  position: relative;
+  height: 550px;
+}
+
+.game-details {
+  display: flex;
+  height: 50px;
+  width: 500px;
+  margin: auto;
+}
+
+#level-label, #timer-label {
+  width: 50%;
+  line-height: 50px;
+  font-family: 'Comfortaa', cursive;
+  font-size: 1.5rem;
+}
+
+#level-label {
+  text-align: left;
+}
+
+#timer-label {
+  text-align: right;
+}
+
+#level, #timer {
+  display: inline-block;
+  width: 5rem;
+}
+
+#timer {
+  text-align: center;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1rem;
+  width: 500px;
+  height: 500px;
+  margin: auto;
+  cursor: pointer;
+}
+
+.grid-button {
+  border-radius: 10%;
+  background-color: var(--dark);
+}
+
+.settings-menu {
+  display: flex;
+}
+
+.settings-button {
+  width: 20%;
+  display: grid;
+}
+
+.settings-button button {
+  place-self: center;
+  height: 50px;
+  width: 50px;
+  cursor: pointer;
+  border: none;
+  background-color: var(--lightest);
+}
+
+.material-icons {
+  font-weight: bold;
+  font-size: 50px;
+  
+}
