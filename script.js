@@ -9,17 +9,39 @@ var gamePage = "start"; // or playing or end
 
 
 const gameGridEl = document.querySelector(".game-grid");
+const startButtonEl = document.querySelector("#start-button");
+
+const startGameOverlay = document.querySelector('.overlay-start');
+const endGameOverlay = document.querySelector('.overlay-end');
 
 const levelNumberSpan = document.querySelector("#level");
 
 
 // functions
 function addNewNumberToAnswer() {
-  answerArray.push(Math.floor(Math.random()*9 + 1));
+  answerArray.push(String(Math.floor(Math.random()*9 + 1)));
 }
 
-function addNewNumberToInputArray(number) {
-  userInputArray.push(number);
+function flashButton(buttonID) {
+  // button will be a string number
+
+  // 7 -> #7 for queryselector
+  const buttonIDtag = '#button' + buttonID;
+
+  // select the buttonÍ
+  const button = document.querySelector(buttonIDtag);
+  console.log(button);
+
+  // animate the button flash
+  button.style.animation = "flashButton 1s linear 0.1s";
+  
+
+  // // save the current color to change it back later
+  // const currentCol = button.style.backgroundColor
+  // console.log(currentCol);
+
+  // // set the button color to white
+  // button.style.backgroundColor = "white";
 }
 
 
@@ -27,13 +49,37 @@ function addNewNumberToInputArray(number) {
 
 levelNumberSpan.innerText = answerArray.length;
 
+// start button clicked
+startButtonEl.addEventListener("click", function(e) {
+  e.preventDefault();
+
+  // hide the start message overlay
+  startGameOverlay.style.display = "none"; // style.display = "block" to display
+
+  // randomly generate 1 new number and add it to answerArray
+  addNewNumberToAnswer();
+  console.log(answerArray)
+
+  // flash the first button of the answer sequence
+  flashButton(answerArray[0]);
+})
+
+
+
+
+
+
+
+
+// user input button clicked
 gameGridEl.addEventListener("click", function(e) {
   e.preventDefault();
 
+  // ignore click if it's in a gap
   if (e.target.getAttribute('class') != 'grid-button') {
-    console.log("not a button");
     return;
   }
 
-  console.log("button");
+  // add button number to userInputArray
+  userInputArray.push(e.target.getAttribute('id')); // will add string, later use == instead of ===
 })

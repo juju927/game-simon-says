@@ -2,6 +2,7 @@
   --text-col: black;
   --grid-inactive-col: red;
   --grid-active-col: blue;
+  --flash-col: white;
   --bg-col: rgb(238, 241, 255);
   --lightest: rgb(210, 218, 255);
   --mid: rgb(170, 196, 255);
@@ -92,8 +93,15 @@ header {
   background-color: var(--dark);
 }
 
+@keyframes flashButton {
+  0% {background-color: var(--dark);}
+  25% {background-color: var(--flash-col);}
+  75% {background-color: var(--flash-col);}
+  100% {background-color: var(--dark);}
+}
+
 .overlay-start {
-  display: none;
+  display: block; 
   position: absolute;
   width: 600px;
   height: 600px;
