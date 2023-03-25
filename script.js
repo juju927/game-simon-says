@@ -6,7 +6,7 @@ const answerArray = []; //stores computer generated answer - add to it every lev
 var userInputIndex = -1; //keeps track of user's number of inputs - add to it every button press, reset every level
 var gamePage = "start"; // or playing or end 
 
-
+var flashInterval = 1;
 
 const gameGridEl = document.querySelector(".game-grid");
 const startButtonEl = document.querySelector("#start-button");
@@ -26,23 +26,21 @@ function flashButton(buttonID) {
   // button will be a string number
 
   // 7 -> #7 for queryselector
-  const buttonIDtag = '#button' + buttonID;
+  const buttonIDtag = "#button" + buttonID;
 
-  // select the buttonÍ
+  // select the button
   const button = document.querySelector(buttonIDtag);
   console.log(button);
 
   // animate the button flash
-  button.style.animation = "flashButton 1s linear 0.1s";
-  
+  button.style.animation = `flashButton ${flashInterval}s linear 0.1s`;
 
-  // // save the current color to change it back later
-  // const currentCol = button.style.backgroundColor
-  // console.log(currentCol);
-
-  // // set the button color to white
-  // button.style.backgroundColor = "white";
+  // remove the animation style after button is done flashing
+  setTimeout(function() {
+    button.style.animation = "none";
+  }, flashInterval*1000)
 }
+
 
 
 // DOM Manipulation
@@ -60,8 +58,10 @@ startButtonEl.addEventListener("click", function(e) {
   addNewNumberToAnswer();
   console.log(answerArray)
 
-  // flash the first button of the answer sequence
-  flashButton(answerArray[0]);
+  // flash the first button of the answer sequence after 1.5s
+  setTimeout(function() {
+    flashButton(answerArray[0]);
+  }, 1500);
 })
 
 

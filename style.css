@@ -95,7 +95,7 @@ header {
 
 @keyframes flashButton {
   0% {background-color: var(--dark);}
-  25% {background-color: var(--flash-col);}
+  5% {background-color: var(--flash-col);}
   75% {background-color: var(--flash-col);}
   100% {background-color: var(--dark);}
 }
