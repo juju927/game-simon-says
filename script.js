@@ -27,3 +27,13 @@ function addNewNumberToInputArray(number) {
 
 levelNumberSpan.innerText = answerArray.length;
 
+gameGridEl.addEventListener("click", function(e) {
+  e.preventDefault();
+
+  if (e.target.getAttribute('class') != 'grid-button') {
+    console.log("not a button");
+    return;
+  }
+
+  console.log("button");
+})
