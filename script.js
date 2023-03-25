@@ -7,6 +7,7 @@ var userInputIndex = -1; //keeps track of user's number of inputs - add to it ev
 var gamePage = "start"; // or playing or end 
 
 var flashInterval = 1;
+var boardActive = false;
 
 const gameGridEl = document.querySelector(".game-grid");
 const startButtonEl = document.querySelector("#start-button");
@@ -37,16 +38,13 @@ function flashButton(buttonID) {
 
   // remove the animation style after button is done flashing
   setTimeout(function() {
-    button.style.animation = "none";
-  }, flashInterval*1000)
+    button.style.animation = "";
+  }, flashInterval*1000);
 }
 
 
 
-// DOM Manipulation
-
-levelNumberSpan.innerText = answerArray.length;
-
+// event listeners
 // start button clicked
 startButtonEl.addEventListener("click", function(e) {
   e.preventDefault();
@@ -62,6 +60,9 @@ startButtonEl.addEventListener("click", function(e) {
   setTimeout(function() {
     flashButton(answerArray[0]);
   }, 1500);
+
+  // activate the board (allow user to click on board)
+  boardActive = true; 
 })
 
 
@@ -76,10 +77,33 @@ gameGridEl.addEventListener("click", function(e) {
   e.preventDefault();
 
   // ignore click if it's in a gap
-  if (e.target.getAttribute('class') != 'grid-button') {
+  if ((e.target.getAttribute('class') != 'grid-button') || !boardActive) {
     return;
   }
 
   // add button number to userInputArray
-  userInputArray.push(e.target.getAttribute('id')); // will add string, later use == instead of ===
+  userInputArray.push(e.target.getAttribute('id').slice(-1)); 
+  console.log(userInputArray);
+  // increase user input index by 1
+  userInputIndex ++;
+  // flash the button
+  flashButton(userInputArray[userInputIndex]);
+
+  // check if level complete (all inputs correct)
+  if (userInputArray == answerArray) {
+    // prepare for a new round
+    boardActive = false; // deactivate the board
+    userInputArray = []; // reset user input array
+    addNewNumberToAnswer(); // randomly gen new number and append to answer array
+    levelNumberSpan.innerText = answerArray.length; // increase the level number in the UI
+
+    // flash answerArray in sequence
+    for (let index = 0; index < answerArray.length; index++) {
+      setTimeout(function() {
+        flashButton(answerArray[index]);
+      }, flashInterval/2);    
+    }
+  }
+  console.log("aaaa");
+
 })
