@@ -1,7 +1,5 @@
 :root {
   --text-col: black;
-  --grid-inactive-col: red;
-  --grid-active-col: blue;
   --flash-col: white;
   --bg-col: rgb(238, 241, 255);
   --lightest: rgb(210, 218, 255);
@@ -93,6 +91,11 @@ header {
   background-color: var(--dark);
 }
 
+.flashing-grid-button {
+  animation-name: flashButton;
+  animation-duration: 1s
+}
+
 @keyframes flashButton {
   0% {background-color: var(--dark);}
   5% {background-color: var(--flash-col);}
@@ -103,8 +106,8 @@ header {
 .overlay-start {
   display: block; 
   position: absolute;
-  width: 600px;
-  height: 600px;
+  width: 500px;
+  height: 500px;
   z-index: 10;
   background-color: var(--dark);
   text-align: center;
@@ -115,9 +118,6 @@ header {
   font-size: 1.5rem;  
   padding: 0.7rem 1rem 0.7rem 1rem;
 }
-
-
-
 
 .settings-menu {
   display: flex;
