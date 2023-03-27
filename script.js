@@ -26,12 +26,13 @@ function addNewNumberToAnswer() {
 function flashAllButtons(arr) {
   // arr is the array holding the number ids of the buttons to be flashed by the computer
   var index = 0;
-  setInterval(function flashyFlash() {
+  const flashyFlash = setInterval(function() {
     if (index < arr.length) {
       flashButton(arr[index]);
       index ++;
     } else {
       boardActive = true;
+      console.log("flashed all");
       clearInterval(flashyFlash);
     }
   }, flashInterval * 1500)
@@ -49,11 +50,11 @@ function flashButton(buttonID) {
   const button = document.querySelector(buttonIDtag);
 
   // animate the button flash
-  button.classList.add("flashing-grid-button")
+  button.classList.add("flashing-grid-button");
 
   // remove the animation
   setTimeout(function() {
-  button.classList.remove("flashing-grid-button")
+  button.classList.remove("flashing-grid-button");
   }, flashInterval * 1000)
 };
 
@@ -92,12 +93,13 @@ gameGridEl.addEventListener("click", function (e) {
   e.preventDefault();
 
   // ignore click if it's in a gap
-  if (e.target.getAttribute("class") != "grid-button" || !boardActive) {
+  if (!(e.target.classList.contains("grid-button")) || !boardActive) {
     return;
   }
 
   // add button number to userInputArray
   userInputArray.push(e.target.getAttribute("id").slice(-1));
+  console.log("modified? id", e.target.getAttribute('id'));
   console.log(userInputArray);
 
   // increase user input index by 1
@@ -113,16 +115,17 @@ gameGridEl.addEventListener("click", function (e) {
     backgroundEl.style.backgroundColor = "green"; // visual cue
 
     // prepare for a new round
+    userInputIndex = -1;
     boardActive = false; // deactivate the board
     userInputArray.splice(0, userInputArray.length); // reset user input array
     addNewNumberToAnswer(); // randomly gen new number and append to answer array
     levelNumberSpan.innerText = answerArray.length; // increase the level number in the UI
 
-
+    console.log("answerarr", answerArray);
     // flash answerArray in sequence
     setTimeout(function() {
       flashAllButtons(answerArray);
-    }, 5000)
+    }, 1500)
     
     // check if each step is correct
   } else if (userInputArray[userInputIndex] == answerArray[userInputIndex]) {
