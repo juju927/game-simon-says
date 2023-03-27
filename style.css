@@ -5,10 +5,29 @@
   --lightest: rgb(210, 218, 255);
   --mid: rgb(170, 196, 255);
   --dark: rgb(177, 178, 255);
+  --red: rgb(248, 101, 101);
+  --green: rgb(80, 255, 92);
+
 }
 
 body {
   background-color: var(--lightest);
+  font-family: 'Roboto Flex', sans-serif;
+  animation-duration: 1s;
+}
+
+@keyframes flashWrongBg {
+  0% {background-color: var(--lightest);}
+  5% {background-color: var(--red);}
+  75% {background-color: var(--red);}
+  100% {background-color: var(--lightest);}
+}
+
+@keyframes flashCorrectBg {
+  0% {background-color: var(--lightest);}
+  5% {background-color: var(--green);}
+  75% {background-color: var(--green);}
+  100% {background-color: var(--lightest);}
 }
 
 button {
@@ -53,7 +72,6 @@ header {
 #level-label, #timer-label {
   width: 50%;
   line-height: 50px;
-  font-family: 'Comfortaa', cursive;
   font-size: 1.5rem;
 }
 
@@ -93,7 +111,7 @@ header {
 
 .flashing-grid-button {
   animation-name: flashButton;
-  animation-duration: 1s
+  animation-duration: 0.7s;
 }
 
 @keyframes flashButton {
@@ -103,19 +121,41 @@ header {
   100% {background-color: var(--dark);}
 }
 
-.overlay-start {
-  display: block; 
+.overlay-start,
+.overlay-end {
   position: absolute;
   width: 500px;
   height: 500px;
   z-index: 10;
+  border-radius: 10%;
   background-color: var(--dark);
   text-align: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: default;
 }
 
-.overlay-start button {
-  font-family: 'Comfortaa', cursive;
-  font-size: 1.5rem;  
+.overlay-start {
+  display: flex;
+  font-size: 1.2rem;
+}
+
+.overlay-end {
+  display: none;
+  font-size: 3rem;
+}
+
+.overlay-start p,
+.overlay-end p {
+  margin: 3rem;
+  line-height: 2.5;
+}
+
+.overlay-start button,
+.overlay-end button {
+  font-family: 'Gaegu', cursive;
+  font-size: 1.5rem;
+  font-weight: bold;  
   padding: 0.7rem 1rem 0.7rem 1rem;
 }
 

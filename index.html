@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beep Beep Boop - Sequence Memory Test</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Gaegu:wght@700&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Gaegu:wght@700&family=Roboto+Flex:wght@200&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -30,12 +30,16 @@
         <div class="grid-button" id="button3"></div>
 
         <div class="overlay-start">
-          <p>Memorise the pattern.<br/>
-            Repeat it after!</p><br/>
+          <p>Memorise the sequence of buttons that light up, then press them in order.<br/>
+            Every time you finish the pattern, it gets longer.<br/>
+            Make a mistake, and the game is over!<br/></p>
           <button id="start-button">Start</button>
         </div>
   
-        <div class="overlay-end"></div>
+        <div class="overlay-end">
+          <p font-size="5rem">Level <span id="endinglevel"></span><br/></p>
+          <button id="restart-button">Play Again</button>
+        </div>
       </div>
 
     </div>

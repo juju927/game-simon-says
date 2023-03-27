@@ -5,16 +5,18 @@ const answerArray = []; //stores computer generated answer - add to it every lev
 var userInputIndex = -1; //keeps track of user's number of inputs - add to it every button press, reset every level
 var gamePage = "start"; // or playing or end
 
-var flashInterval = 1;
+var flashInterval = 1000;
 var boardActive = false;
 
 const gameGridEl = document.querySelector(".game-grid");
 const startButtonEl = document.querySelector("#start-button");
+const restartButtonEl = document.querySelector("#restart-button");
 
 const startGameOverlay = document.querySelector(".overlay-start");
 const endGameOverlay = document.querySelector(".overlay-end");
 
 const levelNumberSpan = document.querySelector("#level");
+const endLevelNumberSpan = document.querySelector("#endinglevel");
 
 const backgroundEl = document.querySelector("body");
 
@@ -33,9 +35,10 @@ function flashAllButtons(arr) {
     } else {
       boardActive = true;
       console.log("flashed all");
+      backgroundEl.style.animationName = null;
       clearInterval(flashyFlash);
     }
-  }, flashInterval * 1500)
+  }, flashInterval)
 }
 
 function flashButton(buttonID) {
@@ -55,7 +58,7 @@ function flashButton(buttonID) {
   // remove the animation
   setTimeout(function() {
   button.classList.remove("flashing-grid-button");
-  }, flashInterval * 1000)
+  }, 700)
 };
 
 
@@ -77,11 +80,40 @@ function arraySame(arr1, arr2) {
 startButtonEl.addEventListener("click", function (e) {
   e.preventDefault();
 
+  // empty answer array
+  answerArray.splice(0, answerArray.length);
+
   // hide the start message overlay
   startGameOverlay.style.display = "none"; // style.display = "block" to display
 
   // randomly generate 1 new number and add it to answerArray
   addNewNumberToAnswer();
+
+  // flash the first button of the answer sequence
+  flashAllButtons(answerArray);
+});
+
+// restart button clicked
+restartButtonEl.addEventListener("click", function (e) {
+  e.preventDefault();
+
+  // reset answer array
+  answerArray.splice(0, answerArray.length);
+
+  // reset user input array
+  userInputArray.splice(0, userInputArray.length); 
+
+  // reset user input index
+  userInputIndex = -1;
+
+  // randomly generate 1 new number and add it to answerArray
+  addNewNumberToAnswer();
+
+  // reset level number in the UI
+  levelNumberSpan.innerText = answerArray.length; 
+
+  // hide the start message overlay
+  endGameOverlay.style.display = "none"; // style.display = "block" to display
 
   // flash the first button of the answer sequence
   flashAllButtons(answerArray);
@@ -99,8 +131,6 @@ gameGridEl.addEventListener("click", function (e) {
 
   // add button number to userInputArray
   userInputArray.push(e.target.getAttribute("id").slice(-1));
-  console.log("modified? id", e.target.getAttribute('id'));
-  console.log(userInputArray);
 
   // increase user input index by 1
   userInputIndex++;
@@ -112,7 +142,7 @@ gameGridEl.addEventListener("click", function (e) {
 
   // check if level complete (all inputs correct)
   if (arraySame(userInputArray, answerArray)) {
-    backgroundEl.style.backgroundColor = "green"; // visual cue
+    backgroundEl.style.animationName = 'flashCorrectBg'; // visual cue
 
     // prepare for a new round
     userInputIndex = -1;
@@ -125,7 +155,7 @@ gameGridEl.addEventListener("click", function (e) {
     // flash answerArray in sequence
     setTimeout(function() {
       flashAllButtons(answerArray);
-    }, 1500)
+    }, flashInterval)
     
     // check if each step is correct
   } else if (userInputArray[userInputIndex] == answerArray[userInputIndex]) {
@@ -133,8 +163,10 @@ gameGridEl.addEventListener("click", function (e) {
 
     // step is wrong
   } else {
-    backgroundEl.style.backgroundColor = "red"; // visual cue
+    backgroundEl.style.animationName = 'flashWrongBg'; // visual cue
     boardActive = false;
+    endLevelNumberSpan.innerText = levelNumberSpan.innerText;
+    endGameOverlay.style.display = 'block';
     return;
   }
 });
