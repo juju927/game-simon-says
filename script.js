@@ -15,8 +15,11 @@ const restartButtonEl = document.querySelector("#restart-button");
 const startGameOverlay = document.querySelector(".overlay-start");
 const endGameOverlay = document.querySelector(".overlay-end");
 
+const gameDetailsEl = document.querySelector('.game-details');
 const levelNumberSpan = document.querySelector("#level");
 const endLevelNumberSpan = document.querySelector("#endinglevel");
+
+const settingsMenuEl = document.querySelector('.settings-menu');
 
 const backgroundEl = document.querySelector("body");
 
@@ -75,19 +78,35 @@ function arraySame(arr1, arr2) {
   }
 }
 
+function resetGame() {
+    // deactivate the board
+    boardActive = false;
+
+    // reset answer array
+    answerArray.splice(0, answerArray.length);
+
+    // reset user input array
+    userInputArray.splice(0, userInputArray.length); 
+  
+    // reset user input index
+    userInputIndex = -1;
+  
+    // randomly generate 1 new number and add it to answerArray
+    addNewNumberToAnswer();
+  
+    // reset level number in the UI
+    levelNumberSpan.innerText = answerArray.length; 
+}
+
 // event listeners
 // start button clicked
 startButtonEl.addEventListener("click", function (e) {
   e.preventDefault();
 
-  // empty answer array
-  answerArray.splice(0, answerArray.length);
+  resetGame()
 
   // hide the start message overlay
   startGameOverlay.style.display = "none"; // style.display = "block" to display
-
-  // randomly generate 1 new number and add it to answerArray
-  addNewNumberToAnswer();
 
   // flash the first button of the answer sequence
   flashAllButtons(answerArray);
@@ -97,22 +116,9 @@ startButtonEl.addEventListener("click", function (e) {
 restartButtonEl.addEventListener("click", function (e) {
   e.preventDefault();
 
-  // reset answer array
-  answerArray.splice(0, answerArray.length);
+  resetGame()
 
-  // reset user input array
-  userInputArray.splice(0, userInputArray.length); 
-
-  // reset user input index
-  userInputIndex = -1;
-
-  // randomly generate 1 new number and add it to answerArray
-  addNewNumberToAnswer();
-
-  // reset level number in the UI
-  levelNumberSpan.innerText = answerArray.length; 
-
-  // hide the start message overlay
+  // hide the end message overlay
   endGameOverlay.style.display = "none"; // style.display = "block" to display
 
   // flash the first button of the answer sequence
@@ -170,3 +176,24 @@ gameGridEl.addEventListener("click", function (e) {
     return;
   }
 });
+
+settingsMenuEl.addEventListener("click", function(e) {
+  e.preventDefault();
+
+  if (e.target.getAttribute('class') != 'material-icons') {
+    return;
+  }
+
+  console.log(e.target.innerText);
+
+  // reset button keypress
+  if (e.target.innerText == "refresh") {
+    if (window.confirm("Are you sure you want to restart from Level 1?")) {
+      startGameOverlay.style.display = "block";
+      resetGame()
+    } else {
+      return;
+    }
+    
+  };
+})

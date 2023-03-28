@@ -6,7 +6,7 @@
   --mid: rgb(170, 196, 255);
   --dark: rgb(177, 178, 255);
   --red: rgb(248, 101, 101);
-  --green: rgb(80, 255, 92);
+  --white: rgb(212, 250, 215);
 
 }
 
@@ -39,7 +39,7 @@ button {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 5fr .7fr;
   width: 600px;
-  height: 800px;
+  height: 770px;
   margin: auto;
   border-radius: 3%;
   background-color: var(--lightest);
@@ -127,7 +127,7 @@ header {
   width: 500px;
   height: 500px;
   z-index: 10;
-  border-radius: 10%;
+  border-radius: 15.6px;
   background-color: var(--dark);
   text-align: center;
   align-items: center;
