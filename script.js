@@ -1,4 +1,9 @@
 // variables
+const colorVarArray = ["--text-col", "--background-col", "--grid-col", "--flash-col"];
+
+const lightPaletteArray = ["black", "#d2daff", "#b1b2ff", "white"];
+const darkPaletteArray = ["#eef1ff", "#03001C", "#301E67", "#5B8FB9"];
+
 const userInputArray = []; //stores user inputs - reset every level
 const answerArray = []; //stores computer generated answer - add to it every level, reset every game over
 
@@ -15,33 +20,33 @@ const restartButtonEl = document.querySelector("#restart-button");
 const startGameOverlay = document.querySelector(".overlay-start");
 const endGameOverlay = document.querySelector(".overlay-end");
 
-const gameDetailsEl = document.querySelector('.game-details');
+const gameDetailsEl = document.querySelector(".game-details");
 const levelNumberSpan = document.querySelector("#level");
 const endLevelNumberSpan = document.querySelector("#endinglevel");
 
-const settingsMenuEl = document.querySelector('.settings-menu');
+const settingsMenuEl = document.querySelector(".settings-menu");
 
 const backgroundEl = document.querySelector("body");
 
 // functions
 function addNewNumberToAnswer() {
-  answerArray.push(Math.floor(Math.random()*9 + 1));
+  answerArray.push(Math.floor(Math.random() * 9 + 1));
 }
 
 function flashAllButtons(arr) {
   // arr is the array holding the number ids of the buttons to be flashed by the computer
   var index = 0;
-  const flashyFlash = setInterval(function() {
+  const flashyFlash = setInterval(function () {
     if (index < arr.length) {
       flashButton(arr[index]);
-      index ++;
+      index++;
     } else {
       boardActive = true;
       console.log("flashed all");
       backgroundEl.style.animationName = null;
       clearInterval(flashyFlash);
     }
-  }, flashInterval)
+  }, flashInterval);
 }
 
 function flashButton(buttonID) {
@@ -59,11 +64,10 @@ function flashButton(buttonID) {
   button.classList.add("flashing-grid-button");
 
   // remove the animation
-  setTimeout(function() {
-  button.classList.remove("flashing-grid-button");
-  }, 700)
-};
-
+  setTimeout(function () {
+    button.classList.remove("flashing-grid-button");
+  }, flashInterval - 300);
+}
 
 function arraySame(arr1, arr2) {
   if (arr1.length == arr2.length) {
@@ -79,23 +83,29 @@ function arraySame(arr1, arr2) {
 }
 
 function resetGame() {
-    // deactivate the board
-    boardActive = false;
+  // deactivate the board
+  boardActive = false;
 
-    // reset answer array
-    answerArray.splice(0, answerArray.length);
+  // reset answer array
+  answerArray.splice(0, answerArray.length);
 
-    // reset user input array
-    userInputArray.splice(0, userInputArray.length); 
-  
-    // reset user input index
-    userInputIndex = -1;
-  
-    // randomly generate 1 new number and add it to answerArray
-    addNewNumberToAnswer();
-  
-    // reset level number in the UI
-    levelNumberSpan.innerText = answerArray.length; 
+  // reset user input array
+  userInputArray.splice(0, userInputArray.length);
+
+  // reset user input index
+  userInputIndex = -1;
+
+  // randomly generate 1 new number and add it to answerArray
+  addNewNumberToAnswer();
+
+  // reset level number in the UI
+  levelNumberSpan.innerText = answerArray.length;
+}
+
+function toggleLightDark(palette) {
+  for (i = 0; i < palette.length; i++) {
+    document.documentElement.style.setProperty(colorVarArray[i], palette[i]);
+  }
 }
 
 // event listeners
@@ -103,7 +113,7 @@ function resetGame() {
 startButtonEl.addEventListener("click", function (e) {
   e.preventDefault();
 
-  resetGame()
+  resetGame();
 
   // hide the start message overlay
   startGameOverlay.style.display = "none"; // style.display = "block" to display
@@ -116,7 +126,7 @@ startButtonEl.addEventListener("click", function (e) {
 restartButtonEl.addEventListener("click", function (e) {
   e.preventDefault();
 
-  resetGame()
+  resetGame();
 
   // hide the end message overlay
   endGameOverlay.style.display = "none"; // style.display = "block" to display
@@ -125,13 +135,12 @@ restartButtonEl.addEventListener("click", function (e) {
   flashAllButtons(answerArray);
 });
 
-
 // user input button clicked
 gameGridEl.addEventListener("click", function (e) {
   e.preventDefault();
 
   // ignore click if it's in a gap
-  if (!(e.target.classList.contains("grid-button")) || !boardActive) {
+  if (!e.target.classList.contains("grid-button") || !boardActive) {
     return;
   }
 
@@ -148,7 +157,7 @@ gameGridEl.addEventListener("click", function (e) {
 
   // check if level complete (all inputs correct)
   if (arraySame(userInputArray, answerArray)) {
-    backgroundEl.style.animationName = 'flashCorrectBg'; // visual cue
+    backgroundEl.style.animationName = "flashCorrectBg"; // visual cue
 
     // prepare for a new round
     userInputIndex = -1;
@@ -159,41 +168,67 @@ gameGridEl.addEventListener("click", function (e) {
 
     console.log("answerarr", answerArray);
     // flash answerArray in sequence
-    setTimeout(function() {
+    setTimeout(function () {
       flashAllButtons(answerArray);
-    }, flashInterval)
-    
+    }, flashInterval);
+
     // check if each step is correct
   } else if (userInputArray[userInputIndex] == answerArray[userInputIndex]) {
     return;
 
     // step is wrong
   } else {
-    backgroundEl.style.animationName = 'flashWrongBg'; // visual cue
+    backgroundEl.style.animationName = "flashWrongBg"; // visual cue
     boardActive = false;
     endLevelNumberSpan.innerText = levelNumberSpan.innerText;
-    endGameOverlay.style.display = 'block';
+    endGameOverlay.style.display = "block";
     return;
   }
 });
 
-settingsMenuEl.addEventListener("click", function(e) {
+settingsMenuEl.addEventListener("click", function (e) {
   e.preventDefault();
 
-  if (e.target.getAttribute('class') != 'material-icons') {
+  if (e.target.getAttribute("class") != "material-icons") {
     return;
   }
 
-  console.log(e.target.innerText);
-
-  // reset button keypress
+  // reset button pressed
   if (e.target.innerText == "refresh") {
     if (window.confirm("Are you sure you want to restart from Level 1?")) {
       startGameOverlay.style.display = "block";
-      resetGame()
+      resetGame();
     } else {
       return;
     }
-    
-  };
-})
+  }
+
+  // light mode button pressed
+  if (e.target.innerText == "wb_sunny") {
+    toggleLightDark(lightPaletteArray);
+    e.target.innerText = "brightness_2";
+    return
+  }
+
+  // dark mode button pressed
+  if (e.target.innerText == "brightness_2") {
+    toggleLightDark(darkPaletteArray);
+    e.target.innerText = "wb_sunny";
+    return
+  }
+
+  // fast forward button pressed
+  if (e.target.innerText == "fast_forward") {
+    flashInterval = 500;
+    // change animation duration
+    e.target.innerText = "play_arrow";  
+    return;
+  }
+
+  // play button pressed
+  if (e.target.innerText == "play_arrow") {
+    flashInterval = 1000;
+    e.target.innerText = "fast_forward";
+    return;
+  }
+});
