@@ -10,8 +10,13 @@ const answerArray = []; //stores computer generated answer - add to it every lev
 var userInputIndex = -1; //keeps track of user's number of inputs - add to it every button press, reset every level
 var gamePage = "start"; // or playing or end
 
+var gamin = false;
+
 var flashInterval = 1000;
 var boardActive = false;
+
+var timeLeft = 0;
+var timedMode = false;
 
 const gameGridEl = document.querySelector(".game-grid");
 const startButtonEl = document.querySelector("#start-button");
@@ -23,9 +28,10 @@ const endGameOverlay = document.querySelector(".overlay-end");
 const gameDetailsEl = document.querySelector(".game-details");
 const levelNumberSpan = document.querySelector("#level");
 const endLevelNumberSpan = document.querySelector("#endinglevel");
+const timerEl = document.querySelector('#timer-label');
+const timeLeftSpan = document.querySelector('#timer');
 
 const settingsMenuEl = document.querySelector(".settings-menu");
-
 const backgroundEl = document.querySelector("body");
 
 // functions
@@ -117,6 +123,7 @@ startButtonEl.addEventListener("click", function (e) {
 
   // hide the start message overlay
   startGameOverlay.style.display = "none"; // style.display = "block" to display
+  gamin = true;
 
   // flash the first button of the answer sequence
   flashAllButtons(answerArray);
@@ -130,6 +137,7 @@ restartButtonEl.addEventListener("click", function (e) {
 
   // hide the end message overlay
   endGameOverlay.style.display = "none"; // style.display = "block" to display
+  gamin = true;
 
   // flash the first button of the answer sequence
   flashAllButtons(answerArray);
@@ -178,6 +186,7 @@ gameGridEl.addEventListener("click", function (e) {
 
     // step is wrong
   } else {
+    gamin = false;
     backgroundEl.style.animationName = "flashWrongBg"; // visual cue
     boardActive = false;
     endLevelNumberSpan.innerText = levelNumberSpan.innerText;
@@ -193,9 +202,38 @@ settingsMenuEl.addEventListener("click", function (e) {
     return;
   }
 
+  // light mode button pressed
+  if (e.target.innerText == "wb_sunny") {
+    toggleLightDark(lightPaletteArray);
+    e.target.innerText = "brightness_2";
+    return
+  }
+  
+  // dark mode button pressed
+  if (e.target.innerText == "brightness_2") {
+    toggleLightDark(darkPaletteArray);
+    e.target.innerText = "wb_sunny";
+    return
+  }
+  
   // reset button pressed
   if (e.target.innerText == "refresh") {
-    if (window.confirm("Are you sure you want to restart from Level 1?")) {
+    if (gamin) {
+      if (window.confirm("Are you sure you want to restart from Level 1?")) {
+        startGameOverlay.style.display = "block";
+        resetGame();
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
+  }
+
+  // timed mode button pressed // NOT DONE
+  if (e.target.innerText == "access_time") {
+
+    if (window.confirm("To activate timed mode, you need to restart from Level 1. \nDo you want to activate timed mode?")) {
       startGameOverlay.style.display = "block";
       resetGame();
     } else {
@@ -203,19 +241,7 @@ settingsMenuEl.addEventListener("click", function (e) {
     }
   }
 
-  // light mode button pressed
-  if (e.target.innerText == "wb_sunny") {
-    toggleLightDark(lightPaletteArray);
-    e.target.innerText = "brightness_2";
-    return
-  }
 
-  // dark mode button pressed
-  if (e.target.innerText == "brightness_2") {
-    toggleLightDark(darkPaletteArray);
-    e.target.innerText = "wb_sunny";
-    return
-  }
 
   // fast forward button pressed
   if (e.target.innerText == "fast_forward") {
