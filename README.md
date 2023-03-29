@@ -44,4 +44,5 @@ Then I wrote the code in js and I edit and see how :D
 ## major hurdles
 
 1. Animating the button flashes and flashing them in sequence
+
    Making the next button flash happen only _after_ the previous button flash has ended was difficult. I started by using `setTimeout()` but ended up having many nested `setTimeout()` that were manually configured, which was not practical. `setInterval()` was the best solution to that, and I got inspiration from my coursemates who were discussing 1.6 homework's bonus question :D

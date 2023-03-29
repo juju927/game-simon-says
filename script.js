@@ -114,6 +114,20 @@ function toggleLightDark(palette) {
   }
 }
 
+function toggleTimedMode() { // set visual cue later
+  if (timedMode) {
+    // if currently in timed mode - turn off timed mode
+    timedMode = false;
+    timeLeft = 0;
+    timerEl.style.display = "none";
+  } else {
+    // if currently not in timed mode - turn on timed mode
+    timedMode = true;
+    timeLeft = 5;
+    timerEl.style.display = "inline-block";
+  }
+}
+
 // event listeners
 // start button clicked
 startButtonEl.addEventListener("click", function (e) {
@@ -204,16 +218,16 @@ settingsMenuEl.addEventListener("click", function (e) {
 
   // light mode button pressed
   if (e.target.innerText == "wb_sunny") {
-    toggleLightDark(lightPaletteArray);
+    toggleLightDark(darkPaletteArray);
     e.target.innerText = "brightness_2";
-    return
+    return;
   }
   
   // dark mode button pressed
   if (e.target.innerText == "brightness_2") {
-    toggleLightDark(darkPaletteArray);
+    toggleLightDark(lightPaletteArray);
     e.target.innerText = "wb_sunny";
-    return
+    return;
   }
   
   // reset button pressed
@@ -222,23 +236,36 @@ settingsMenuEl.addEventListener("click", function (e) {
       if (window.confirm("Are you sure you want to restart from Level 1?")) {
         startGameOverlay.style.display = "block";
         resetGame();
+        gamin = false;
+        return;
       } else {
         return;
       }
-    } else {
+    } else { 
+      // ignore the click if no game currently in play
       return;
     }
   }
 
   // timed mode button pressed // NOT DONE
   if (e.target.innerText == "access_time") {
-
-    if (window.confirm("To activate timed mode, you need to restart from Level 1. \nDo you want to activate timed mode?")) {
-      startGameOverlay.style.display = "block";
-      resetGame();
-    } else {
-      return;
-    }
+    if (gamin) {
+      if (window.confirm("To activate/ deactivate timed mode, you need to restart from Level 1. \nDo you want to continue?")) {
+        // mid-game, confirmed restart
+        startGameOverlay.style.display = "block";
+        resetGame();
+        toggleTimedMode();
+        return
+      } else {
+        // mid-game, cancelled restart
+        return
+      }
+    } else {     
+      console.log("wa!");
+      console.log(timerEl);
+      toggleTimedMode();
+      return
+    } 
   }
 
 
