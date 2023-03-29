@@ -1,8 +1,8 @@
-## beep beep boop!
+# beep beep boop!
 
 A sequence memory game.
 
-# how to play
+## how to play
 
 Press 'Start' to start a new game.
 
@@ -12,9 +12,9 @@ With every correctly pressed full sequence, the sequence will get longer and the
 
 The game repeats until the player makes a mistake of pressing the wrong button!
 
-# features
+## features
 
-The 5 icons at the bottom screen modify the game or its UI in some way. They can only be used on the players' turn and will only apply to the next sequence or game.
+The 5 icons at the bottom screen modify the game or its UI in some way. Some will only apply to the next sequence or game, forcing a reset of the game.
 
 1. Enable/ Disable game sounds
 2. Light/ Dark mode
@@ -23,11 +23,11 @@ The 5 icons at the bottom screen modify the game or its UI in some way. They can
    Repeat the sequence in the given time
 5. 1x/ 2x Speed
 
-## technologies used
+# technologies used
 
 This game was written in HTML, CSS, and JavaScript.
 
-# general approach
+## general approach
 
 My MVP - flashing a sequence on a screen, allowing the user to input a sequence, and finally checking whether or not the sequence matched.
 
@@ -39,9 +39,9 @@ After having all the elements I needed in place, I started by writing a pseudoco
 
 Then I wrote the code in js and I edit and see how :D
 
-# sketches of wireframes
+## sketches of wireframes
 
-# major hurdles
+## major hurdles
 
 1. Animating the button flashes and flashing them in sequence
    Making the next button flash happen only _after_ the previous button flash has ended was difficult. I started by using `setTimeout()` but ended up having many nested `setTimeout()` that were manually configured, which was not practical. `setInterval()` was the best solution to that, and I got inspiration from my coursemates who were discussing 1.6 homework's bonus question :D
