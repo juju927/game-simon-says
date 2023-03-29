@@ -1,6 +1,5 @@
 // variables
 const colorVarArray = ["--text-col", "--background-col", "--grid-col", "--flash-col"];
-
 const lightPaletteArray = ["black", "#d2daff", "#b1b2ff", "white"];
 const darkPaletteArray = ["#eef1ff", "#03001C", "#301E67", "#5B8FB9"];
 
@@ -8,14 +7,12 @@ const userInputArray = []; //stores user inputs - reset every level
 const answerArray = []; //stores computer generated answer - add to it every level, reset every game over
 
 var userInputIndex = -1; //keeps track of user's number of inputs - add to it every button press, reset every level
-var gamePage = "start"; // or playing or end
 
-var gamin = false;
+var gamin = false; //true - user is playing the game, false - user on start or end screen
 
-var flashInterval = 1000;
-var boardActive = false;
+var flashInterval = 1000; 
+var boardActive = false; //true - allow user to click board, false - disallow user from clicking on the board
 
-var timeLeft = 0;
 var timedMode = false;
 
 const gameGridEl = document.querySelector(".game-grid");
@@ -49,6 +46,9 @@ function flashAllButtons(arr) {
     } else {
       boardActive = true;
       console.log("flashed all");
+      if (timedMode) {
+        countdown(arr.length+5);
+      }
       backgroundEl.style.animationName = null;
       clearInterval(flashyFlash);
     }
@@ -75,7 +75,26 @@ function flashButton(buttonID) {
   }, flashInterval - 300);
 }
 
+function countdown(totalTime) {
+  var timeLeft = totalTime;
+  const timeyTime = setInterval(function() {
+    if (timeLeft >= 0 && (!arraySame(userInputArray, answerArray))) {
+      timeLeftSpan.innerText = timeLeft; 
+      timeLeft--;
+    } else if (arraySame(userInputArray, answerArray)) {
+      console.log("i am here");
+      clearInterval(timeyTime);
+    } else {
+      gameOver();
+      resetGame();
+      clearInterval(timeyTime);
+    }
+  }, 1000)
+
+}
+
 function arraySame(arr1, arr2) {
+  // just to check if 2 arrays are the same
   if (arr1.length == arr2.length) {
     for (let index = 0; index < arr1.length; index++) {
       if (!(arr1[index] == arr2[index])) {
@@ -86,6 +105,13 @@ function arraySame(arr1, arr2) {
   } else {
     return false;
   }
+}
+
+function gameOver() {
+  gamin = false;
+  boardActive = false;
+  endLevelNumberSpan.innerText = levelNumberSpan.innerText;
+  endGameOverlay.style.display = "block";
 }
 
 function resetGame() {
@@ -118,12 +144,10 @@ function toggleTimedMode() { // set visual cue later
   if (timedMode) {
     // if currently in timed mode - turn off timed mode
     timedMode = false;
-    timeLeft = 0;
     timerEl.style.display = "none";
   } else {
     // if currently not in timed mode - turn on timed mode
     timedMode = true;
-    timeLeft = 5;
     timerEl.style.display = "inline-block";
   }
 }
@@ -157,12 +181,17 @@ restartButtonEl.addEventListener("click", function (e) {
   flashAllButtons(answerArray);
 });
 
-// user input button clicked
+// grid area clicked
 gameGridEl.addEventListener("click", function (e) {
   e.preventDefault();
 
   // ignore click if it's in a gap
   if (!e.target.classList.contains("grid-button") || !boardActive) {
+    return;
+  }
+
+  // ignore the click if the button is flashing
+  if (e.target.classList.contains("flashing-grid-button")){
     return;
   }
 
@@ -200,15 +229,13 @@ gameGridEl.addEventListener("click", function (e) {
 
     // step is wrong
   } else {
-    gamin = false;
     backgroundEl.style.animationName = "flashWrongBg"; // visual cue
-    boardActive = false;
-    endLevelNumberSpan.innerText = levelNumberSpan.innerText;
-    endGameOverlay.style.display = "block";
+    gameOver();
     return;
   }
 });
 
+// settings menu clicked
 settingsMenuEl.addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -255,25 +282,21 @@ settingsMenuEl.addEventListener("click", function (e) {
         startGameOverlay.style.display = "block";
         resetGame();
         toggleTimedMode();
-        return
+        return;
       } else {
         // mid-game, cancelled restart
-        return
+        return;
       }
     } else {     
-      console.log("wa!");
       console.log(timerEl);
       toggleTimedMode();
-      return
+      return;
     } 
   }
-
-
 
   // fast forward button pressed
   if (e.target.innerText == "fast_forward") {
     flashInterval = 500;
-    // change animation duration
     e.target.innerText = "play_arrow";  
     return;
   }
