@@ -3,6 +3,13 @@ const colorVarArray = ["--text-col", "--background-col", "--grid-col", "--flash-
 const lightPaletteArray = ["black", "#d2daff", "#b1b2ff", "white"];
 const darkPaletteArray = ["#eef1ff", "#03001C", "#301E67", "#5B8FB9"];
 
+const buttonSoundsLinks = ['numBut1.mp3', 'numBut2.mp3', 'numBut3.mp3']
+const buttonSounds = [];
+
+for (text of buttonSoundsLinks) {
+  buttonSounds.push(new Audio(text));
+}
+
 const userInputArray = []; //stores user inputs - reset every level
 const answerArray = []; //stores computer generated answer - add to it every level, reset every game over
 
@@ -13,7 +20,9 @@ var gamin = false; //true - user is playing the game, false - user on start or e
 var flashInterval = 1000; 
 var boardActive = false; //true - allow user to click board, false - disallow user from clicking on the board
 
-var timedMode = false;
+var timedMode = false; // true - timer, false - no timer
+
+var soundMode = true; // true - unmuted, false - muted
 
 const gameGridEl = document.querySelector(".game-grid");
 const startButtonEl = document.querySelector("#start-button");
@@ -198,6 +207,11 @@ gameGridEl.addEventListener("click", function (e) {
   // add button number to userInputArray
   userInputArray.push(e.target.getAttribute("id").slice(-1));
 
+  // play sound of button press
+  if (soundMode) {
+    buttonSounds[0].play(); // aiyah now only got 3 sound by 9 number HOW?
+  };
+
   // increase user input index by 1
   userInputIndex++;
 
@@ -240,6 +254,20 @@ settingsMenuEl.addEventListener("click", function (e) {
   e.preventDefault();
 
   if (e.target.getAttribute("class") != "material-icons") {
+    return;
+  }
+
+  // if sound button pressed
+  if (e.target.innerText == "volume_up") {
+    soundMode = false;
+    e.target.innerText = "volume_off";
+    return;
+  }
+
+  // if muted button pressed
+  if (e.target.innerText == "volume_off") {
+    soundMode = true;
+    e.target.innerText = "volume_up";
     return;
   }
 
