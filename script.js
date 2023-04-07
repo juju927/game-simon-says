@@ -13,16 +13,19 @@ for (text of buttonSoundsLinks) {
 const userInputArray = []; //stores user inputs - reset every level
 const answerArray = []; //stores computer generated answer - add to it every level, reset every game over
 
-var userInputIndex = -1; //keeps track of user's number of inputs - add to it every button press, reset every level
+let userInputIndex = -1; //keeps track of user's number of inputs - add to it every button press, reset every level
 
-var gamin = false; //true - user is playing the game, false - user on start or end screen
+let gamin = false; //true - user is playing the game, false - user on start or end screen
 
-var flashInterval = 1000; 
-var boardActive = false; //true - allow user to click board, false - disallow user from clicking on the board
+let flashInterval = 1000; 
+let boardActive = false; //true - allow user to click board, false - disallow user from clicking on the board
 
-var timedMode = false; // true - timer, false - no timer
+let timedMode = false; // true - timer, false - no timer
 
-var soundMode = true; // true - unmuted, false - muted
+let soundMode = true; // true - unmuted, false - muted
+
+let timeyTime; // placeholder var for setInterval id
+let count = answerArray.length + 3; // timeyTime's counter
 
 const gameGridEl = document.querySelector(".game-grid");
 const startButtonEl = document.querySelector("#start-button");
@@ -56,7 +59,7 @@ function flashAllButtons(arr) {
       boardActive = true;
       console.log("flashed all");
       if (timedMode) {
-        countdown(arr.length+5);
+        startCountdown();
       }
       backgroundEl.style.animationName = null;
       clearInterval(flashyFlash);
@@ -84,22 +87,31 @@ function flashButton(buttonID) {
   }, flashInterval - 300);
 }
 
-function countdown(totalTime) {
-  var timeLeft = totalTime;
-  const timeyTime = setInterval(function() {
-    if (timeLeft >= 0 && (!arraySame(userInputArray, answerArray))) {
-      timeLeftSpan.innerText = timeLeft; 
-      timeLeft--;
-    } else if (arraySame(userInputArray, answerArray)) {
-      console.log("i am here");
-      clearInterval(timeyTime);
-    } else {
-      gameOver();
-      resetGame();
-      clearInterval(timeyTime);
-    }
-  }, 1000)
+function startCountdown() {
+  if (!timeyTime) {
+    timeyTime = setInterval(countDownToZero, 1000);
+  }
+}
 
+function countDownToZero() {
+  if (count === 1) { 
+    stopCountdown();
+    gameOver();
+  }
+  count--;
+  timeLeftSpan.innerText = count;
+}
+
+function stopCountdown() {
+  clearInterval(timeyTime);
+  // release our intervalID from the variable
+  timeyTime = null;
+}
+
+function resetCountdown(){
+  stopCountdown();
+  count = answerArray.length + 3;
+  timeLeftSpan.innerText = count;
 }
 
 function arraySame(arr1, arr2) {
@@ -121,6 +133,7 @@ function gameOver() {
   boardActive = false;
   endLevelNumberSpan.innerText = levelNumberSpan.innerText;
   endGameOverlay.style.display = "block";
+  resetCountdown();
 }
 
 function resetGame() {
@@ -141,6 +154,8 @@ function resetGame() {
 
   // reset level number in the UI
   levelNumberSpan.innerText = answerArray.length;
+
+  resetCountdown();
 }
 
 function toggleLightDark(palette) {
@@ -209,7 +224,7 @@ gameGridEl.addEventListener("click", function (e) {
 
   // play sound of button press
   if (soundMode) {
-    buttonSounds[0].play(); // aiyah now only got 3 sound by 9 number HOW?
+    buttonSounds[0].play(); // aiyah now only got 3 sound but 9 number HOW?
   };
 
   // increase user input index by 1
@@ -223,6 +238,7 @@ gameGridEl.addEventListener("click", function (e) {
   // check if level complete (all inputs correct)
   if (arraySame(userInputArray, answerArray)) {
     backgroundEl.style.animationName = "flashCorrectBg"; // visual cue
+    resetCountdown();
 
     // prepare for a new round
     userInputIndex = -1;
